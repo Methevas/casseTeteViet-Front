@@ -1,3 +1,26 @@
+table {
+  width: 100%;
+  border-collapse:separate;
+  border-spacing: 0 1em;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 40%;
+}
+
+td, th {
+  width: 25%;
+}
+
+tr{
+  height: 5em;
+}
+
+.actions{
+  margin-right: 5%;
+}
+
 section {
   display: table;
 }
@@ -28,4 +51,9 @@ section {
   display: flex;
   justify-content: center;
   width: 120px;
+}
+.agrandirPolice {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 400;
 }
