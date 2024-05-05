@@ -26,4 +26,17 @@ export class SolutionService {
   deleteSolution(id:number): Observable<Object> {
     return this.http.delete<Object>(environments.baseUrl+environments.context+environments.solution+"/"+id);
   }
+
+  deleteSolutions(): Observable<Object> {
+    return this.http.delete<Object>(environments.baseUrl+environments.context+environments.solutions);
+  }
+
+  genererSolution(): Observable<Object> {
+    return this.http.get<Object>(environments.baseUrl+environments.context+environments.solutions+environments.calcul)
+  }
+
+  solutionsSontDejaGeneree(): Observable<boolean> {
+    return this.http.get<boolean>(environments.baseUrl+environments.context+environments.solutions+environments.exist)
+  }
+
 }

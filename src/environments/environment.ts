@@ -4,5 +4,7 @@ export const environments = {
   baseUrl: "http://localhost:4200",
   context: "/casseTeteViet/v1",
   solutions:"/solutions",
-  solution:"/solution"
+  solution:"/solution",
+  calcul:"/calcul",
+  exist:"/exist"
 }
