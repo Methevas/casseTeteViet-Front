@@ -1,10 +1,14 @@
 <div style="text-align: left">
-  <button mat-fab aria-label="Lancer la generation des Solutions" (click)="genererSoulutions()" extended>
+  <button [disabled]="tempsCalcul != 0" [style.color]="'green'" mat-fab aria-label="Lancer la generation des Solutions" (click)="genererLesSolutions()" extended>
     {{genererSoulutionsTitre}}
     <mat-icon>construction</mat-icon>
   </button>
+  <button [disabled]="!tempsCalcul" [style.color]="'red'" mat-fab aria-label="supprimer toutes les solutions" (click)="supprimerLesSolutions()" extended>
+    {{supprimerSoulutionsTitre}}
+    <mat-icon>delete_forever</mat-icon>
+  </button>
 </div>
-<div>{{titre1}}
+<div><div [hidden]="!tempsCalcul || tempsCalcul ==0">{{listeDesSolutionsTitre}}{{tempsCalcul}}{{"ms"}}</div>
   <mat-form-field>
     <mat-label>Rechercher dans le tableau</mat-label>
     <input [disabled]="!listeSolutions || listeSolutions.solutions.length == 0" matInput (keyup)="applyFilter($event)" placeholder="1,4,8.." #input>
@@ -13,27 +17,33 @@
 
     <!-- Id -->
     <ng-container matColumnDef="id">
-      <th mat-sort-header *matHeaderCellDef> No.</th>
-      <td mat-cell *matCellDef="let element"> {{ element.id }}</td>
+      <th style="text-align: center" mat-sort-header *matHeaderCellDef> No.</th>
+      <td style="text-align: center" mat-cell *matCellDef="let element"> {{ element.id }}</td>
     </ng-container>
 
     <!-- Numerotation -->
     <ng-container matColumnDef="numerotation">
-      <th mat-sort-header *matHeaderCellDef> Valeurs </th>
-      <td mat-cell class="agrandirPolice" *matCellDef="let element"> {{ element.valeurs | uppercase}}</td>
+      <th style="text-align: center" mat-header *matHeaderCellDef> Valeurs </th>
+      <td style="text-align: center" mat-cell class="agrandirPolice" *matCellDef="let element"> {{ element.valeurs | uppercase}}</td>
+    </ng-container>
+
+    <!-- Statut -->
+    <ng-container matColumnDef="statut">
+      <th style="text-align: center" mat-sort-header *matHeaderCellDef> Statut </th>
+      <td style="text-align: center" *matCellDef="let element"><mat-checkbox disabled [(ngModel)]="element.statut"></mat-checkbox><div *ngIf="element.statut">{{correcte}}</div><div *ngIf="!element.statut">{{incorrecte}}</div></td>
     </ng-container>
 
     <!-- Actions -->
     <ng-container matColumnDef="actions">
       <th mat-header *matHeaderCellDef> Actions</th>
       <td mat-cell  style="text-align: center" *matCellDef="let element">
-        <button mat-fab class="actions" color="gray" aria-label="afficher le détail de la solution" (click)="view(element.id)">
+        <button mat-fab class="actions" color="gray" aria-label="afficher le détail de la solution" (click)="detail(element.id)">
           <mat-icon>visibility</mat-icon>
         </button>
-        <button mat-fab class="actions" color="gray" aria-label="Modifier la solution">
+        <button mat-fab class="actions" color="gray" aria-label="Modifier la solution" (click)="modifier(element.id)">
           <mat-icon>edit_square</mat-icon>
         </button>
-        <button mat-fab class="actions" color="gray" aria-label="Supprimer la solution">
+        <button mat-fab class="actions" color="gray" aria-label="Supprimer la solution" (click)="supprimerSolution(element.id,element.index)">
           <mat-icon>delete</mat-icon>
         </button>
 
@@ -45,13 +55,14 @@
 
     <!-- Row shown when there is no matching data. -->
     <tr class="mat-row" *matNoDataRow>
-      <td *ngIf="listeSolutions" class="mat-cell" colspan="4">Aucune solution trouvée contenant "{{input.value}}"</td>
-      <td *ngIf="!listeSolutions" class="mat-cell" colspan="4">Aucune solution générée pour l'instant</td>
+      <td *ngIf="listeSolutions && listeSolutions.solutions.length > 0" class="mat-cell" colspan="4">Aucune solution trouvée contenant "{{input.value}}"</td>
+      <td *ngIf="!listeSolutions || listeSolutions.solutions.length == 0" class="mat-cell" colspan="4">Aucune solution générée pour l'instant</td>
     </tr>
 
   </table>
   <mat-paginator #paginator
                  [pageSizeOptions]="pageSizeOptions"
+                 [pageIndex]="0"
                  aria-label="Select page">
   </mat-paginator>
 </div>
